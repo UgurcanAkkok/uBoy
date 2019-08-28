@@ -7,3 +7,5 @@
 #include "rom.h"
 #include "mem.h"
 #include "cpu.h"
+
+#define HEXDUMP 0

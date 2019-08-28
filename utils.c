@@ -67,9 +67,9 @@ void disassemble(char * outname){
     uint8_t byte;
     unsigned short j;
 
-    for (i = 0; i < 0x8000; i++){
+    for (i = 0; i < 0x8000;){
         fprintf(out, "%.8X :\t", i);
-        for(j = 0; j < 15; j++){
+        for(j = 0; j < 16; j++){
             byte = read_mem((uint16_t) i++);
             fprintf(out, "%.2x ", byte);
         }

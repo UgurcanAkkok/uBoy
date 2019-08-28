@@ -14,8 +14,11 @@ int main(int argc, char* argv[]){
     log_init();
 
     load_rom(argv[1]);
+#if HEXDUMP
+    disassemble("rom.x");
+#else
     cpu_main();
-    /*disassemble("rom.x");*/
+#endif
 
     log_close();
 
