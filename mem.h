@@ -19,6 +19,7 @@ struct memory{
 
 uint8_t read_mem(uint16_t addr);
 void write_mem(uint8_t data, uint16_t addr);
+uint8_t * access_mem(uint16_t addr);
 
 // Read bytes from the file and writes them to
 // second argument
