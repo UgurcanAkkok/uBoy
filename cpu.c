@@ -18,16 +18,16 @@ void set_hl(uint16_t var){
 }
 
 uint16_t get_af(){
-    return (cpu.A << 8) | cpu.F;
+    return ((uint16_t)cpu.A << 8) | cpu.F;
 }
 uint16_t get_bc(){
-    return (cpu.B << 8) | cpu.C;
+    return ((uint16_t)cpu.B << 8) | cpu.C;
 }
 uint16_t get_de(){
-    return (cpu.D << 8) | cpu.E;
+    return ((uint16_t)cpu.D << 8) | cpu.E;
 }
 uint16_t get_hl(){
-    return (cpu.H << 8) | cpu.L;
+    return ((uint16_t)cpu.H << 8) | cpu.L;
 }
 
 void set_flag_zero(bool val){
@@ -63,132 +63,132 @@ bool get_flag_carry(){
 instruction instructions [0x100] = {
 /*  Opcode    assembly     OprndLen Cycles  Function */
     [0x00] = {"NOP",             0,  4,       *nop},
-    [0x01] = {"LD BC,d16",       2, 12,       NULL},
-    [0x02] = {"LD (BC),A",       0,  8,       NULL},
+    [0x01] = {"LD BC,d16",       2, 12,  *ld_bc_nn},
+    [0x02] = {"LD (BC),A",       0,  8,   *ld_bc_a},
     [0x03] = {"INC BC",          0,  8,       NULL},
     [0x04] = {"INC B",           0,  4,       NULL},
     [0x05] = {"DEC B",           0,  4,       NULL},
-    [0x06] = {"LD B,d8",         1,  8,       NULL},
+    [0x06] = {"LD B,d8",         1,  8,    *ld_b_n},
     [0x07] = {"RLCA",            0,  4,       NULL},
-    [0x08] = {"LD (a16),SP",     2, 20,       NULL},
+    [0x08] = {"LD (a16),SP",     2, 20,  *ld_nn_sp},
     [0x09] = {"ADD HL,BC",       0,  8,       NULL},
-    [0x0a] = {"LD A,(BC)",       0,  8,       NULL},
+    [0x0a] = {"LD A,(BC)",       0,  8,   *ld_a_bc},
     [0x0b] = {"DEC BC",          0,  8,       NULL},
     [0x0c] = {"INC C",           0,  4,       NULL},
     [0x0d] = {"DEC C",           0,  4,       NULL},
-    [0x0e] = {"LD C,d8",         1,  8,       NULL},
+    [0x0e] = {"LD C,d8",         1,  8,    *ld_c_n},
     [0x0f] = {"RRCA",            0,  4,       NULL},
     [0x10] = {"STOP 0",          1,  4,       NULL},
-    [0x11] = {"LD DE,d16",       2, 12,   ld_de_nn},
-    [0x12] = {"LD (DE),A",       0,  8,       NULL},
+    [0x11] = {"LD DE,d16",       2, 12,  *ld_de_nn},
+    [0x12] = {"LD (DE),A",       0,  8,   *ld_de_a},
     [0x13] = {"INC DE",          0,  8,       NULL},
     [0x14] = {"INC D",           0,  4,       NULL},
     [0x15] = {"DEC D",           0,  4,       NULL},
-    [0x16] = {"LD D,d8",         1,  8,       NULL},
+    [0x16] = {"LD D,d8",         1,  8,    *ld_d_n},
     [0x17] = {"RLA",             0,  4,       NULL},
     [0x18] = {"JR r8",           1, 12,       NULL},
     [0x19] = {"ADD HL,DE",       0,  8,       NULL},
-    [0x1a] = {"LD A,(DE)",       0,  8,       NULL},
+    [0x1a] = {"LD A,(DE)",       0,  8,   *ld_a_de},
     [0x1b] = {"DEC DE",          0,  8,       NULL},
     [0x1c] = {"INC E",           0,  4,       NULL},
     [0x1d] = {"DEC E",           0,  4,       NULL},
-    [0x1e] = {"LD E,d8",         1,  8,       NULL},
+    [0x1e] = {"LD E,d8",         1,  8,    *ld_e_n},
     [0x1f] = {"RRA",             0,  4,       NULL},
     [0x20] = {"JR NZ,r8",        1,  8,       NULL},
-    [0x21] = {"LD HL,d16",       2, 12,       NULL},
-    [0x22] = {"LD (HL+),A",      0,  8,       NULL},
+    [0x21] = {"LD HL,d16",       2, 12,  *ld_hl_nn},
+    [0x22] = {"LD (HL+),A",      0,  8,  *ldi_hl_a},
     [0x23] = {"INC HL",          0,  8,       NULL},
     [0x24] = {"INC H",           0,  4,       NULL},
     [0x25] = {"DEC H",           0,  4,       NULL},
-    [0x26] = {"LD H,d8",         1,  8,       NULL},
+    [0x26] = {"LD H,d8",         1,  8,    *ld_h_n},
     [0x27] = {"RLA",             0,  4,       NULL},
     [0x28] = {"JR r8",           1, 12,       NULL},
     [0x29] = {"ADD HL,DE",       0,  8,       NULL},
-    [0x2a] = {"LD A,(HL+)",      0,  8,       NULL},
+    [0x2a] = {"LD A,(HL+)",      0,  8,  *ldi_a_hl},
     [0x2b] = {"DEC HL",          0,  8,       NULL},
     [0x2c] = {"INC L",           0,  4,      *inc_l},
     [0x2d] = {"DEC L",           0,  4,       NULL},
-    [0x2e] = {"LD L,d8",         1,  8,       NULL},
+    [0x2e] = {"LD L,d8",         1,  8,    *ld_l_n},
     [0x2f] = {"CPL",             0,  4,       NULL},
     [0x30] = {"JR NC,r8",        1,  8,       NULL},
-    [0x31] = {"LD SP,d16",       2, 12,       NULL},
-    [0x32] = {"LD (HL-),A",      0,  8,       NULL},
+    [0x31] = {"LD SP,d16",       2, 12,  *ld_sp_nn},
+    [0x32] = {"LD (HL-),A",      0,  8,  *ldd_hl_a},
     [0x33] = {"INC SP",          0,  8,       NULL},
     [0x34] = {"INC (HL)",        0, 12,       NULL},
     [0x35] = {"DEC (HL)",        0, 12,       NULL},
-    [0x36] = {"LD (HL),d8",      1, 12,       NULL},
+    [0x36] = {"LD (HL),d8",      1, 12,   *ld_hl_n},
     [0x37] = {"SCF",             0,  4,       NULL},
     [0x38] = {"JR C,r8",         1,  8,       NULL},
     [0x39] = {"ADD HL,SP",       0,  8,       NULL},
-    [0x3a] = {"LD A,(HL-)",      0,  8,       NULL},
+    [0x3a] = {"LD A,(HL-)",      0,  8,  *ldd_a_hl},
     [0x3b] = {"DEC SP",          0,  8,       NULL},
     [0x3c] = {"INC A",           0,  4,       NULL},
     [0x3d] = {"DEC A",           0,  4,       NULL},
-    [0x3e] = {"LD A,d8",         1,  8,       NULL},
+    [0x3e] = {"LD A,d8",         1,  8,    *ld_a_n},
     [0x3f] = {"CCF",             0,  4,       NULL},
-    [0x40] = {"LD B,B",          0,  4,       NULL},
-    [0x41] = {"LD B,C",          0,  4,       NULL},
-    [0x42] = {"LD B,D",          0,  4,       NULL},
-    [0x43] = {"LD B,E",          0,  4,       NULL},
-    [0x44] = {"LD B,H",          0,  4,       NULL},
-    [0x45] = {"LD B,L",          0,  4,       NULL},
-    [0x46] = {"LD B,(HL)",       0,  8,       NULL},
-    [0x47] = {"LD B,A",          0,  4,       NULL},
-    [0x48] = {"LD C,B",          0,  4,       NULL},
-    [0x49] = {"LD C,C",          0,  4,       NULL},
+    [0x40] = {"LD B,B",          0,  4,    *ld_b_b},
+    [0x41] = {"LD B,C",          0,  4,    *ld_b_c},
+    [0x42] = {"LD B,D",          0,  4,    *ld_b_d},
+    [0x43] = {"LD B,E",          0,  4,    *ld_b_e},
+    [0x44] = {"LD B,H",          0,  4,    *ld_b_h},
+    [0x45] = {"LD B,L",          0,  4,    *ld_b_l},
+    [0x46] = {"LD B,(HL)",       0,  8,   *ld_b_hl},
+    [0x47] = {"LD B,A",          0,  4,    *ld_b_a},
+    [0x48] = {"LD C,B",          0,  4,    *ld_c_b},
+    [0x49] = {"LD C,C",          0,  4,    *ld_c_c},
     [0x4a] = {"LD C,D",          0,  4,    *ld_c_d},
     [0x4b] = {"LD C,E",          0,  4,    *ld_c_e},
-    [0x4c] = {"INC A",           0,  4,       NULL},
-    [0x4d] = {"DEC A",           0,  4,       NULL},
-    [0x4e] = {"LD A,d8",         1,  8,       NULL},
-    [0x4f] = {"CCF",             0,  4,       NULL},
+    [0x4c] = {"LD C,H",          0,  4,    *ld_c_h},
+    [0x4d] = {"LD C,L",          0,  4,    *ld_c_l},
+    [0x4e] = {"LD C,(HL)",       1,  8,   *ld_c_hl},
+    [0x4f] = {"LD C,A",          0,  4,    *ld_c_a},
     [0x50] = {"LD D,B",          0,  4,    *ld_d_b},
-    [0x51] = {"LD D,C",          0,  4,       NULL},
-    [0x52] = {"LD D,D",          0,  4,       NULL},
+    [0x51] = {"LD D,C",          0,  4,    *ld_d_c},
+    [0x52] = {"LD D,D",          0,  4,    *ld_d_d},
     [0x53] = {"LD D,E",          0,  4,    *ld_d_e},
-    [0x54] = {"LD D,H",          0,  4,       NULL},
+    [0x54] = {"LD D,H",          0,  4,    *ld_d_h},
     [0x55] = {"LD D,L",          0,  4,    *ld_d_l},
-    [0x56] = {"LD D,(HL)",       0,  8,       NULL},
-    [0x57] = {"LD D,A",          0,  4,       NULL},
-    [0x58] = {"LD E,B",          0,  4,       NULL},
-    [0x59] = {"LD E,C",          0,  4,       NULL},
-    [0x5a] = {"LD E,D",          0,  4,       NULL},
-    [0x5b] = {"LD E,E",          0,  4,       NULL},
-    [0x5c] = {"LD E,H",          0,  4,       NULL},
-    [0x5d] = {"LD E,L",          0,  4,       NULL},
-    [0x5e] = {"LD E,(HL)",       0,  8,       NULL},
-    [0x5f] = {"LD E,A",          0,  4,       NULL},
-    [0x60] = {"LD H,B",          0,  4,       NULL},
-    [0x61] = {"LD H,C",          0,  4,       NULL},
-    [0x62] = {"LD H,D",          0,  4,       NULL},
-    [0x63] = {"LD H,E",          0,  4,       NULL},
-    [0x64] = {"LD H,H",          0,  4,       NULL},
-    [0x65] = {"LD H,L",          0,  4,       NULL},
-    [0x66] = {"LD H,(HL)",       0,  8,       NULL},
-    [0x67] = {"LD H,A",          0,  4,       NULL},
-    [0x68] = {"LD L,B",          0,  4,       NULL},
-    [0x69] = {"LD L,C",          0,  4,       NULL},
-    [0x6a] = {"LD L,D",          0,  4,       NULL},
-    [0x6b] = {"LD L,E",          0,  4,       NULL},
-    [0x6c] = {"LD L,H",          0,  4,       NULL},
-    [0x6d] = {"LD L,L",          0,  4,       NULL},
-    [0x6e] = {"LD L,(HL)",       0,  8,       NULL},
-    [0x6f] = {"LD L,A",          0,  4,       NULL},
-    [0x70] = {"LD (HL),B",       0,  8,       NULL},
-    [0x71] = {"LD (HL),C",       0,  8,       NULL},
-    [0x72] = {"LD (HL),D",       0,  8,       NULL},
-    [0x73] = {"LD (HL),E",       0,  8,       NULL},
-    [0x74] = {"LD (HL),H",       0,  8,       NULL},
-    [0x75] = {"LD (HL),L",       0,  8,       NULL},
+    [0x56] = {"LD D,(HL)",       0,  8,   *ld_d_hl},
+    [0x57] = {"LD D,A",          0,  4,    *ld_d_a},
+    [0x58] = {"LD E,B",          0,  4,    *ld_e_b},
+    [0x59] = {"LD E,C",          0,  4,    *ld_e_c},
+    [0x5a] = {"LD E,D",          0,  4,    *ld_e_d},
+    [0x5b] = {"LD E,E",          0,  4,    *ld_e_e},
+    [0x5c] = {"LD E,H",          0,  4,    *ld_e_h},
+    [0x5d] = {"LD E,L",          0,  4,    *ld_e_l},
+    [0x5e] = {"LD E,(HL)",       0,  8,   *ld_e_hl},
+    [0x5f] = {"LD E,A",          0,  4,    *ld_e_a},
+    [0x60] = {"LD H,B",          0,  4,    *ld_h_b},
+    [0x61] = {"LD H,C",          0,  4,    *ld_h_c},
+    [0x62] = {"LD H,D",          0,  4,    *ld_h_d},
+    [0x63] = {"LD H,E",          0,  4,    *ld_h_e},
+    [0x64] = {"LD H,H",          0,  4,    *ld_h_h},
+    [0x65] = {"LD H,L",          0,  4,    *ld_h_l},
+    [0x66] = {"LD H,(HL)",       0,  8,   *ld_h_hl},
+    [0x67] = {"LD H,A",          0,  4,    *ld_h_a},
+    [0x68] = {"LD L,B",          0,  4,    *ld_l_b},
+    [0x69] = {"LD L,C",          0,  4,    *ld_l_c},
+    [0x6a] = {"LD L,D",          0,  4,    *ld_l_d},
+    [0x6b] = {"LD L,E",          0,  4,    *ld_l_e},
+    [0x6c] = {"LD L,H",          0,  4,    *ld_l_h},
+    [0x6d] = {"LD L,L",          0,  4,    *ld_l_l},
+    [0x6e] = {"LD L,(HL)",       0,  8,   *ld_l_hl},
+    [0x6f] = {"LD L,A",          0,  4,    *ld_l_a},
+    [0x70] = {"LD (HL),B",       0,  8,   *ld_hl_b},
+    [0x71] = {"LD (HL),C",       0,  8,   *ld_hl_c},
+    [0x72] = {"LD (HL),D",       0,  8,   *ld_hl_d},
+    [0x73] = {"LD (HL),E",       0,  8,   *ld_hl_e},
+    [0x74] = {"LD (HL),H",       0,  8,   *ld_hl_h},
+    [0x75] = {"LD (HL),L",       0,  8,   *ld_hl_l},
     [0x76] = {"HALT",            0,  4,       NULL},
-    [0x77] = {"LD (HL),A",       0,  8,       NULL},
+    [0x77] = {"LD (HL),A",       0,  8,   *ld_hl_a},
     [0x78] = {"LD A,B",          0,  4,    *ld_a_b},
-    [0x79] = {"LD A,C",          0,  4,       NULL},
-    [0x7a] = {"LD A,D",          0,  4,       NULL},
-    [0x7b] = {"LD A,E",          0,  4,       NULL},
-    [0x7c] = {"LD A,H",          0,  4,       NULL},
-    [0x7d] = {"LD A,L",          0,  4,       NULL},
-    [0x7e] = {"LD A,(HL)",       0,  8,       NULL},
+    [0x79] = {"LD A,C",          0,  4,    *ld_a_c},
+    [0x7a] = {"LD A,D",          0,  4,    *ld_a_d},
+    [0x7b] = {"LD A,E",          0,  4,    *ld_a_e},
+    [0x7c] = {"LD A,H",          0,  4,    *ld_a_h},
+    [0x7d] = {"LD A,L",          0,  4,    *ld_a_l},
+    [0x7e] = {"LD A,(HL)",       0,  8,   *ld_a_hl},
     [0x7f] = {"LD A,A",          0,  4,    *ld_a_a},
     [0x80] = {"ADD A,B",         0,  4,       NULL},
     [0x81] = {"ADD A,C",         0,  4,       NULL},
@@ -206,14 +206,14 @@ instruction instructions [0x100] = {
     [0x8d] = {"ADC A,L",         0,  4,       NULL},
     [0x8e] = {"ADC A,(HL)",      0,  8,       NULL},
     [0x8f] = {"ADC A,A",         0,  4,       NULL},
-    [0x90] = {"SUB B",           0,  4,       NULL},
-    [0x91] = {"SUB C",           0,  4,       NULL},
-    [0x92] = {"SUB D",           0,  4,       NULL},
-    [0x93] = {"SUB E",           0,  4,       NULL},
-    [0x94] = {"SUB H",           0,  4,       NULL},
-    [0x95] = {"SUB L",           0,  4,       NULL},
-    [0x96] = {"SUB (HL)",        0,  8,       NULL},
-    [0x97] = {"SUB A",           0,  4,       NULL},
+    [0x90] = {"SUB B",           0,  4,     *sub_b},
+    [0x91] = {"SUB C",           0,  4,     *sub_c},
+    [0x92] = {"SUB D",           0,  4,     *sub_d},
+    [0x93] = {"SUB E",           0,  4,     *sub_e},
+    [0x94] = {"SUB H",           0,  4,     *sub_h},
+    [0x95] = {"SUB L",           0,  4,     *sub_l},
+    [0x96] = {"SUB (HL)",        0,  8,    *sub_hl},
+    [0x97] = {"SUB A",           0,  4,     *sub_a},
     [0x98] = {"SBC A,B",         0,  4,       NULL},
     [0x99] = {"SBC A,C",         0,  4,       NULL},
     [0x9a] = {"SBC A,D",         0,  4,       NULL},
@@ -338,12 +338,12 @@ void cpu_operate(){
         instruction * cur_ins = &instructions[op];
 
         log_write(MSG, "Register values:");
-        log_value("Current AF : 0x%X", get_af());
-        log_value("Current BC : 0x%X", get_bc());
-        log_value("Current DE : 0x%X", get_de());
-        log_value("Current HL : 0x%X", get_hl());
-        log_value("Current SP : 0x%X", cpu.SP);
-        log_value("Current PC : 0x%X", cpu.PC);
+        log_value("Current AF : 0x%.4X", get_af());
+        log_value("Current BC : 0x%.4X", get_bc());
+        log_value("Current DE : 0x%.4X", get_de());
+        log_value("Current HL : 0x%.4X", get_hl());
+        log_value("Current SP : 0x%.4X", cpu.SP);
+        log_value("Current PC : 0x%.4X", cpu.PC);
 
         log_value("Current OP : 0x%X", op);
         log_write(MSG, cur_ins->disassembly);
@@ -393,14 +393,122 @@ void cpu_main(){
 /* Instructions */
 void nop(){ cpu.PC++; } 
 
-void ld_d_b(){ as_ld_r1_r2(&cpu.D, &cpu.B); }
-void ld_a_b(){ as_ld_r1_r2(&cpu.A, &cpu.B); }
-void ld_a_a(){ nop();}
-void ld_d_e(){ as_ld_r1_r2(&cpu.D, &cpu.E); }
-void ld_c_e(){ as_ld_r1_r2(&cpu.C, &cpu.E); }
-void ld_c_d(){ as_ld_r1_r2(&cpu.C, &cpu.D); }
-void ld_d_l(){ as_ld_r1_r2(&cpu.D, &cpu.L); }
-void ld_de_nn(uint16_t nn){as_ld_rr_nn(DE, nn); };
+void ld_b_b(){ cpu.PC++; }
+void ld_b_c(){ as_ld_r1_r2(&cpu.B, cpu.C); }
+void ld_b_d(){ as_ld_r1_r2(&cpu.B, cpu.D); }
+void ld_b_e(){ as_ld_r1_r2(&cpu.B, cpu.E); }
+void ld_b_h(){ as_ld_r1_r2(&cpu.B, cpu.H); }
+void ld_b_l(){ as_ld_r1_r2(&cpu.B, cpu.L); }
+void ld_b_a(){ as_ld_r1_r2(&cpu.B, cpu.A); }
+void ld_b_hl(){ as_ld_r1_r2(&cpu.B, read_mem(get_hl())); }
+
+void ld_c_b(){ as_ld_r1_r2(&cpu.C, cpu.B); }
+void ld_c_c(){ cpu.PC++; }
+void ld_c_d(){ as_ld_r1_r2(&cpu.C, cpu.D); }
+void ld_c_e(){ as_ld_r1_r2(&cpu.C, cpu.E); }
+void ld_c_h(){ as_ld_r1_r2(&cpu.C, cpu.H); }
+void ld_c_l(){ as_ld_r1_r2(&cpu.C, cpu.L); }
+void ld_c_a(){ as_ld_r1_r2(&cpu.C, cpu.A); }
+void ld_c_hl(){ as_ld_r1_r2(&cpu.C, read_mem(get_hl())); }
+
+void ld_d_b(){ as_ld_r1_r2(&cpu.D, cpu.B); }
+void ld_d_c(){ as_ld_r1_r2(&cpu.D, cpu.C); }
+void ld_d_d(){ cpu.PC++; }
+void ld_d_e(){ as_ld_r1_r2(&cpu.D, cpu.E); }
+void ld_d_h(){ as_ld_r1_r2(&cpu.D, cpu.H); }
+void ld_d_l(){ as_ld_r1_r2(&cpu.D, cpu.L); }
+void ld_d_a(){ as_ld_r1_r2(&cpu.D, cpu.A); }
+void ld_d_hl(){ as_ld_r1_r2(&cpu.D, read_mem(get_hl())); }
+
+void ld_e_b(){ as_ld_r1_r2(&cpu.E, cpu.B); }
+void ld_e_c(){ as_ld_r1_r2(&cpu.E, cpu.C); }
+void ld_e_d(){ as_ld_r1_r2(&cpu.E, cpu.D); }
+void ld_e_e(){ cpu.PC++; }
+void ld_e_h(){ as_ld_r1_r2(&cpu.E, cpu.H); }
+void ld_e_l(){ as_ld_r1_r2(&cpu.E, cpu.L); }
+void ld_e_a(){ as_ld_r1_r2(&cpu.E, cpu.A); }
+void ld_e_hl(){ as_ld_r1_r2(&cpu.E, read_mem(get_hl())); }
+
+void ld_h_b(){ as_ld_r1_r2(&cpu.H, cpu.B); }
+void ld_h_c(){ as_ld_r1_r2(&cpu.H, cpu.C); }
+void ld_h_d(){ as_ld_r1_r2(&cpu.H, cpu.D); }
+void ld_h_e(){ as_ld_r1_r2(&cpu.H, cpu.E); }
+void ld_h_h(){ cpu.PC++; }
+void ld_h_l(){ as_ld_r1_r2(&cpu.H, cpu.L); }
+void ld_h_a(){ as_ld_r1_r2(&cpu.H, cpu.A); }
+void ld_h_hl(){ as_ld_r1_r2(&cpu.H, read_mem(get_hl())); }
+
+void ld_l_b(){ as_ld_r1_r2(&cpu.L, cpu.B); }
+void ld_l_c(){ as_ld_r1_r2(&cpu.L, cpu.C); }
+void ld_l_d(){ as_ld_r1_r2(&cpu.L, cpu.D); }
+void ld_l_e(){ as_ld_r1_r2(&cpu.L, cpu.E); }
+void ld_l_h(){ as_ld_r1_r2(&cpu.L, cpu.H); }
+void ld_l_l(){ cpu.PC++; }
+void ld_l_a(){ as_ld_r1_r2(&cpu.L, cpu.A); }
+void ld_l_hl(){ as_ld_r1_r2(&cpu.L, read_mem(get_hl())); }
+
+void ld_hl_b(){ as_ld_r1_r2(access_mem(get_hl()), cpu.B); }
+void ld_hl_c(){ as_ld_r1_r2(access_mem(get_hl()), cpu.C); }
+void ld_hl_d(){ as_ld_r1_r2(access_mem(get_hl()), cpu.D); }
+void ld_hl_e(){ as_ld_r1_r2(access_mem(get_hl()), cpu.E); }
+void ld_hl_h(){ as_ld_r1_r2(access_mem(get_hl()), cpu.H); }
+void ld_hl_l(){ as_ld_r1_r2(access_mem(get_hl()), cpu.L); }
+void ld_hl_a(){ as_ld_r1_r2(access_mem(get_hl()), cpu.L); }
+
+void ld_a_b(){ as_ld_r1_r2(&cpu.A, cpu.B); }
+void ld_a_c(){ as_ld_r1_r2(&cpu.A, cpu.C); }
+void ld_a_d(){ as_ld_r1_r2(&cpu.A, cpu.D); }
+void ld_a_e(){ as_ld_r1_r2(&cpu.A, cpu.E); }
+void ld_a_h(){ as_ld_r1_r2(&cpu.A, cpu.H); }
+void ld_a_l(){ as_ld_r1_r2(&cpu.A, cpu.L); }
+void ld_a_a(){ cpu.PC++; }
+void ld_a_hl(){ as_ld_r1_r2(&cpu.A, read_mem(get_hl())); }
+
+void ld_a_bc(){ as_ld_r1_r2(&cpu.A, read_mem(get_bc())); }
+void ld_a_de(){ as_ld_r1_r2(&cpu.A, read_mem(get_de())); }
+void ld_bc_a(){ as_ld_r1_r2(access_mem(get_bc()), cpu.A); }
+void ld_de_a(){ as_ld_r1_r2(access_mem(get_de()), cpu.A); }
+void ld_bc_nn(uint16_t nn){ as_ld_rr_nn(BC, nn); }
+void ld_de_nn(uint16_t nn){as_ld_rr_nn(DE, nn); }
+void ld_hl_nn(uint16_t nn){as_ld_rr_nn(HL, nn); }
+void ld_b_n(uint8_t n){ as_ld_r1_r2(&cpu.B, n); }
+void ld_c_n(uint8_t n){ as_ld_r1_r2(&cpu.C, n); }
+void ld_e_n(uint8_t n){ as_ld_r1_r2(&cpu.E, n); }
+void ld_d_n(uint8_t n){ as_ld_r1_r2(&cpu.D, n); }
+void ld_h_n(uint8_t n){ as_ld_r1_r2(&cpu.H, n); }
+void ld_l_n(uint8_t n){ as_ld_r1_r2(&cpu.L, n); }
+void ld_a_n(uint8_t n){ as_ld_r1_r2(&cpu.A, n); }
+void ld_hl_n(uint8_t n){ as_ld_r1_r2(access_mem(get_hl()), n); }
+
+void ldi_hl_a(){
+    *access_mem(get_hl()) = cpu.A;
+    set_hl(get_hl() + 1);
+    cpu.PC++;
+}
+void ldi_a_hl(){
+    cpu.A = read_mem(get_hl());
+    set_hl(get_hl()+1);
+    cpu.PC++;
+}
+void ldd_hl_a(){
+    *access_mem(get_hl()) = cpu.A;
+    set_hl(get_hl() - 1);
+    cpu.PC++;
+}
+void ldd_a_hl(){
+    cpu.A = read_mem(get_hl());
+    set_hl(get_hl()-1);
+    cpu.PC++;
+}
+
+void sub_b(){ as_sub_n(cpu.B); }
+void sub_c(){ as_sub_n(cpu.C); }
+void sub_d(){ as_sub_n(cpu.D); }
+void sub_e(){ as_sub_n(cpu.E); }
+void sub_h(){ as_sub_n(cpu.H); }
+void sub_l(){ as_sub_n(cpu.L); }
+void sub_a(){ as_sub_n(cpu.A); }
+void sub_hl(){ as_sub_n(read_mem(get_hl())); }
 
 void jp_nn(uint16_t nn){ as_jp(nn);}
 
@@ -411,21 +519,14 @@ void ldh_a_n(uint8_t n){
     cpu.PC++;
 }
 
-/* Assembly functions */
-void as_jp(uint16_t addr){
-    log_value("Jumped 0x%X", addr);
-    cpu.PC = addr;
-}
-
-void as_ld_r1_r2(uint8_t * r1, uint8_t * r2){
-    *r1 = *r2;
+void ld_nn_sp(uint16_t nn){ 
+    *access_mem(nn) = (cpu.SP >> 8);
+    *access_mem(nn + 1) = (cpu.SP << 8);
     cpu.PC++;
 }
-
-void as_inc_n(uint8_t * n){
-    *n += 1;
+void ld_sp_nn(uint16_t nn){
+    cpu.SP = nn;
     cpu.PC++;
-
 }
 
 void cp(uint8_t n){
@@ -435,6 +536,24 @@ void cp(uint8_t n){
     set_flag_carry(cpu.A < n);
     cpu.PC++;
 }
+
+/* Assembly functions */
+void as_jp(uint16_t addr){
+    log_value("Jumped 0x%X", addr);
+    cpu.PC = addr;
+}
+
+void as_ld_r1_r2(uint8_t * r1, uint8_t r2){
+    *r1 = r2;
+    cpu.PC++;
+}
+
+void as_inc_n(uint8_t * n){
+    *n += 1;
+    cpu.PC++;
+
+}
+
 
 void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
     switch(reg){
@@ -451,5 +570,10 @@ void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
             set_hl(nn);
             break;
     }
+    cpu.PC++;
+}
+
+void as_sub_n(uint8_t n){
+    cpu.A -= n;
     cpu.PC++;
 }
