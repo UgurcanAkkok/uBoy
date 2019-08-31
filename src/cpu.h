@@ -27,6 +27,15 @@ struct reg {
 
 } cpu;
 
+struct {
+    /* IME can only be set to 1 with EI and RETI instructions,
+     * can only be set to 0 with DI instruction 
+     */
+    bool IME; /* Interrupt Master Enable */
+    uint8_t * IF; /* Interrupt Flags, addr is 0xFF0F  */
+    uint8_t * IE; /* Interrupt Enable, addr is 0xFFFF */
+} ints;
+
 enum reg_pairs {AF, BC, DE, HL};
 
 void set_af(uint16_t var);
@@ -166,9 +175,32 @@ void ldd_hl_a();
 void ldd_a_hl();
 
 void jp_nn(uint16_t);
+void jr_n(uint8_t);
 
+void inc_b();
+void inc_c();
+void inc_d();
+void inc_e();
+void inc_h();
 void inc_l();
+void inc_hl();
+void inc_a();
 
+void inc16_bc();
+void inc16_de();
+void inc16_hl();
+void inc16_sp();
+
+void dec_b();
+void dec_c();
+void dec_d();
+void dec_e();
+void dec_h();
+void dec_l();
+void dec_hl();
+void dec_a();
+
+/* Substract n from A */
 void sub_b();
 void sub_c();
 void sub_d();
@@ -178,13 +210,28 @@ void sub_l();
 void sub_a();
 void sub_hl();
 
+/* Substract n + carry from A */
+void sbc_a_b();
+void sbc_a_c();
+void sbc_a_d();
+void sbc_a_e();
+void sbc_a_h();
+void sbc_a_l();
+void sbc_a_hl();
+void sbc_a_a();
+
 /* Compare n with A */
 void cp(uint8_t n);
+
+/* Complement A register */
+void cpl();
 
 /**** Assembly Functions ****/
 
 /* Jump to given address */
 void as_jp(uint16_t addr); 
+/* Add n to current address and jump to it */
+void as_jr_n(int8_t n);
 
 /* Load value r2 into r1 */
 void as_ld_r1_r2(uint8_t * r1, uint8_t r2);
@@ -193,6 +240,12 @@ void as_ld_r1_r2(uint8_t * r1, uint8_t r2);
 void as_ld_rr_nn(enum reg_pairs, uint16_t);
 
 /* Increment n */
-void as_inc_n(uint8_t * n);
+void as_inc_n(uint8_t*);
+/* Decrement n */
+void as_dec_n(uint8_t * n);
 
+/* Subtract n from A */
 void as_sub_n(uint8_t n);
+
+/* Subctract n + carry from A */
+void as_sbc_a_n(uint8_t);
