@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+oldpwd=`pwd`
+cd src
+rom=../roms/tetris
+log=../log.txt
+make
+../bin/ugameboy $rom
+echo "====== TAIL LOG.TXT ====="
+tail $log
+echo "====== END OF TAIL LOG.TXT ====="
+
+if [[ $( grep "CRITIC" $log ) ]];then
+    echo "====== CRITIC MESSAGES ====="
+    grep "CRITIC" $log
+    echo "====== END OF CRITIC MESSAGES ====="
+fi
+cd $oldpwd
