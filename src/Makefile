@@ -10,6 +10,7 @@ ${EXE}=${EXE:=.c} ${EXE:=.h}
 
 ${EXE}: ${OBJ} ${EXE:=.c} ${EXE:=.h}
 	${CC} ${C_FLAGS} ${OBJ} ${EXE:=.c} -o ${EXE}
+	mv ${EXE} ../bin
 
 utils.o: utils.c utils.h
 	${CC} ${C_FLAGS} utils.c -c

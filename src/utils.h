@@ -7,7 +7,7 @@
 
 #include "mem.h"
 
-#define LOG_FILE_NAME "log.txt"
+#define LOG_FILE_NAME "../log.txt"
 #define LOG_LEVEL 0
 #define LOG 1
 #define LOG_MAX_LENGTH 255
