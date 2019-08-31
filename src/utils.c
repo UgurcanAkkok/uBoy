@@ -1,8 +1,8 @@
 #include "utils.h"
 
-void usage(char* argv[]){
-    printf("usage is : \t%s ROM\n", argv[0]);
-    die("Wrong usage.");
+void usage(){
+    printf("usage is : \t%s ROM\n", __FILE__);
+    die("Usage is printed");
 }
 
 void die(char * errmsg){
@@ -17,20 +17,22 @@ void log_init(){
 #endif
 }
 
-void log_value(char * logfstr, int val){
+void set_log_lvl(int n){
+    LOG_LVL = n;
+}
+
+void log_value(DEBUG_LVL lvl, char * logfstr, int val){
 #if LOG
     char logstr[LOG_MAX_LENGTH];
     sprintf(logstr, logfstr, val);
-    log_write(MSG, logstr);
+    log_write(lvl, logstr);
 #endif
 }
 void log_write(enum DEBUG_LVL lvl, char * logstr){
 #if LOG
- #ifdef LOG_LEVEL
-    if (lvl < LOG_LEVEL) {
+    if (lvl < LOG_LVL) {
         return;
     }
- #endif
 
     switch(lvl){
         case MSG:

@@ -20,7 +20,7 @@ void check_logo(void){
 void load_rom(char * filename){
     FILE * romF = fopen(filename, "r");
     int bytes_read = fread(mem.rom, sizeof(uint8_t), 0x8000, romF);
-    log_value("Number of bytes read from rom : %d", bytes_read);
+    log_value(MSG,"Number of bytes read from rom : %d", bytes_read);
 
     memcpy(cart_header.logo, &mem.rom[0x104], 48);
 
@@ -54,7 +54,6 @@ void load_rom(char * filename){
     cart_header.new_license[0] = mem.rom[0x144];
     cart_header.new_license[1] = mem.rom[0x145];
     cart_header.new_license[2] = '\0';
-    fprintf(logF,"New License is %s\n", cart_header.manufact);
 
     if(mem.rom[0x146] == 0x3)
         cart_header.sgb = 1;
@@ -218,7 +217,7 @@ void load_rom(char * filename){
     int i = 0x134;
     while (i <= 0x14C)
         sum = sum - mem.rom[i++] - 1;
-    log_value("Calculated checksum is %.4X", sum);
+    log_value(MSG,"Calculated checksum is %.4X", sum);
     cart_header.checksum = mem.rom[0x14D];
     if (cart_header.checksum != sum)
         die("Checksum does not match");
@@ -289,7 +288,7 @@ uint8_t read_mem(uint16_t addr){
     }
     else {
         log_write(CRITIC, "Addr is out of boundary");
-        log_value("Addr is 0x%.4X > 0xFFFF", addr);
+        log_value(MSG,"Addr is 0x%.4X > 0xFFFF", addr);
         return 0;
     }
 
@@ -359,7 +358,7 @@ uint8_t * access_mem(uint16_t addr){
 
     else {
         log_write(CRITIC, "Addr is out of boundary");
-        log_value("Addr is 0x%.4X > 0xFFFF", addr);
+        log_value(CRITIC, "Addr is 0x%.4X > 0xFFFF", addr);
         return NULL;
     }
 }

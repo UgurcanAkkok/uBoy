@@ -8,7 +8,7 @@ OBJ=${SRC:.c=.o}
 
 ${EXE}=${EXE:=.c} ${EXE:=.h}
 
-${EXE}: ${OBJ} ${EXE:=.c} ${EXE:=.h}
+../bin/ugameboy: ${OBJ} ${EXE:=.c} ${EXE:=.h}
 	${CC} ${C_FLAGS} ${OBJ} ${EXE:=.c} -o ${EXE}
 	mv ${EXE} ../bin
 

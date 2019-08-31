@@ -5,7 +5,8 @@ cd src
 rom=../roms/tetris
 log=../log.txt
 make
-../bin/ugameboy $rom
+#../bin/ugameboy $rom
+../bin/ugameboy -l0 $rom
 echo "====== TAIL LOG.TXT ====="
 tail $log
 echo "====== END OF TAIL LOG.TXT ====="

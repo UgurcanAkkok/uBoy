@@ -341,18 +341,18 @@ void cpu_operate(){
         instruction * cur_ins = &instructions[op];
 
         log_write(MSG, "Register values:");
-        log_value("Current AF : 0x%.4X", get_af());
-        log_value("Current BC : 0x%.4X", get_bc());
-        log_value("Current DE : 0x%.4X", get_de());
-        log_value("Current HL : 0x%.4X", get_hl());
-        log_value("Current SP : 0x%.4X", cpu.SP);
-        log_value("Current PC : 0x%.4X", cpu.PC);
+        log_value(MSG,"Current AF : 0x%.4X", get_af());
+        log_value(MSG,"Current BC : 0x%.4X", get_bc());
+        log_value(MSG,"Current DE : 0x%.4X", get_de());
+        log_value(MSG,"Current HL : 0x%.4X", get_hl());
+        log_value(MSG,"Current SP : 0x%.4X", cpu.SP);
+        log_value(MSG,"Current PC : 0x%.4X", cpu.PC);
 
-        log_value("Current OP : 0x%.2x", op);
+        log_value(MSG,"Current OP : 0x%.2x", op);
         log_write(MSG, cur_ins->disassembly);
         fflush(logF);
         if (!cur_ins->func){
-            log_value("Unimplemented OP found : 0x%X", op);
+            log_value(ERR, "Unimplemented OP found : 0x%X", op);
             die("");
         }
         uint8_t operand8;
@@ -367,13 +367,13 @@ void cpu_operate(){
                 break;
             case 1:
                 operand8 = read_mem(++cpu.PC);
-                log_value("Used operand 0x%x", operand8);
+                log_value(MSG,"Used operand 0x%x", operand8);
                 ((void (*) (uint8_t))(cur_ins->func))(operand8);
                 break;
             case 2:
                 operand16 = ((uint16_t)read_mem(++cpu.PC))<<8
                     | read_mem(++cpu.PC);
-                log_value("Used operand 0x%x", operand16);
+                log_value(MSG,"Used operand 0x%x", operand16);
                 ((void (*) (uint16_t))(cur_ins->func))(operand16);
                 break;
         }
@@ -485,7 +485,7 @@ void ld_hl_n(uint8_t n){ as_ld_r1_r2(access_mem(get_hl()), n); }
 
 void ldi_hl_a(){
     *access_mem(get_hl()) = cpu.A;
-    log_value("0x%.4X is written to mem", *access_mem(get_hl()));
+    log_value(MSG,"0x%.4X is written to mem", *access_mem(get_hl()));
     set_hl(get_hl() + 1);
     cpu.PC++;
 }
@@ -558,7 +558,7 @@ void ldh_a_n(uint8_t n){
 void ld_nn_sp(uint16_t nn){ 
     *access_mem(nn) = (cpu.SP >> 8);
     *access_mem(nn + 1) = (cpu.SP & 0x00FF);
-    log_value("0x%.4X is written to mem", nn);
+    log_value(MSG,"0x%.4X is written to mem", nn);
     cpu.PC++;
 }
 void ld_sp_nn(uint16_t nn){
@@ -567,7 +567,7 @@ void ld_sp_nn(uint16_t nn){
 }
 
 void cp(uint8_t n){
-    log_value("Compared value is 0x%.2X", n);
+    log_value(MSG,"Compared value is 0x%.2X", n);
     set_flag_zero(cpu.A == n);
     set_flag_substract(1);
     set_flag_halfcarry(((cpu.A - n)&0xF) > (cpu.A&0xF));
@@ -584,23 +584,23 @@ void cpl(){
 }
 /* Assembly functions */
 void as_jp(uint16_t addr){
-    log_value("Jumped 0x%X", addr);
+    log_value(MSG,"Jumped 0x%X", addr);
     cpu.PC = addr;
 }
 
 void as_jr_n(int8_t n){
-    log_value("Jumped 0x%X", --cpu.PC + n);
+    log_value(MSG,"Jumped 0x%X", --cpu.PC + n);
     cpu.PC += n;
 }
 
 void as_ld_r1_r2(uint8_t * r1, uint8_t r2){
     *r1 = r2;
-    log_value("Loaded value is 0x%.2X", r2);
+    log_value(MSG,"Loaded value is 0x%.2X", r2);
     cpu.PC++;
 }
 
 void as_inc_n(uint8_t * n){
-    log_value("Incremented value is 0x%.2X", *n);
+    log_value(MSG,"Incremented value is 0x%.2X", *n);
     *n += 1;
     set_flag_zero(cpu.A == *n);
     set_flag_substract(0);
@@ -609,7 +609,7 @@ void as_inc_n(uint8_t * n){
 }
 
 void as_dec_n(uint8_t * n){
-    log_value("Decremented value is 0x%.2X", *n);
+    log_value(MSG,"Decremented value is 0x%.2X", *n);
     *n -= 1;
     set_flag_zero(cpu.A == *n);
     set_flag_substract(1);
@@ -620,7 +620,7 @@ void as_dec_n(uint8_t * n){
 
 
 void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
-    log_value("Loaded value is 0x%.4X", nn);
+    log_value(MSG,"Loaded value is 0x%.4X", nn);
     switch(reg){
         case AF:
             set_af(nn);
@@ -639,7 +639,7 @@ void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
 }
 
 void as_sub_n(uint8_t n){
-    log_value("Substracted value is 0x%.2X", n);
+    log_value(MSG,"Substracted value is 0x%.2X", n);
     set_flag_zero(cpu.A == n);
     set_flag_substract(1);
     set_flag_carry((cpu.A - n) < 0);
