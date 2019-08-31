@@ -65,55 +65,55 @@ instruction instructions [0x100] = {
     [0x00] = {"NOP",             0,  4,       *nop},
     [0x01] = {"LD BC,d16",       2, 12,  *ld_bc_nn},
     [0x02] = {"LD (BC),A",       0,  8,   *ld_bc_a},
-    [0x03] = {"INC BC",          0,  8,       NULL},
-    [0x04] = {"INC B",           0,  4,       NULL},
-    [0x05] = {"DEC B",           0,  4,       NULL},
+    [0x03] = {"INC BC",          0,  8,  *inc16_bc},
+    [0x04] = {"INC B",           0,  4,     *inc_b},
+    [0x05] = {"DEC B",           0,  4,     *dec_b},
     [0x06] = {"LD B,d8",         1,  8,    *ld_b_n},
     [0x07] = {"RLCA",            0,  4,       NULL},
     [0x08] = {"LD (a16),SP",     2, 20,  *ld_nn_sp},
     [0x09] = {"ADD HL,BC",       0,  8,       NULL},
     [0x0a] = {"LD A,(BC)",       0,  8,   *ld_a_bc},
     [0x0b] = {"DEC BC",          0,  8,       NULL},
-    [0x0c] = {"INC C",           0,  4,       NULL},
-    [0x0d] = {"DEC C",           0,  4,       NULL},
+    [0x0c] = {"INC C",           0,  4,     *inc_c},
+    [0x0d] = {"DEC C",           0,  4,     *dec_c},
     [0x0e] = {"LD C,d8",         1,  8,    *ld_c_n},
     [0x0f] = {"RRCA",            0,  4,       NULL},
     [0x10] = {"STOP 0",          1,  4,       NULL},
     [0x11] = {"LD DE,d16",       2, 12,  *ld_de_nn},
     [0x12] = {"LD (DE),A",       0,  8,   *ld_de_a},
-    [0x13] = {"INC DE",          0,  8,       NULL},
-    [0x14] = {"INC D",           0,  4,       NULL},
-    [0x15] = {"DEC D",           0,  4,       NULL},
+    [0x13] = {"INC DE",          0,  8,  *inc16_de},
+    [0x14] = {"INC D",           0,  4,     *inc_d},
+    [0x15] = {"DEC D",           0,  4,     *dec_d},
     [0x16] = {"LD D,d8",         1,  8,    *ld_d_n},
     [0x17] = {"RLA",             0,  4,       NULL},
-    [0x18] = {"JR r8",           1, 12,       NULL},
+    [0x18] = {"JR r8",           1, 12,      *jr_n},
     [0x19] = {"ADD HL,DE",       0,  8,       NULL},
     [0x1a] = {"LD A,(DE)",       0,  8,   *ld_a_de},
     [0x1b] = {"DEC DE",          0,  8,       NULL},
-    [0x1c] = {"INC E",           0,  4,       NULL},
-    [0x1d] = {"DEC E",           0,  4,       NULL},
+    [0x1c] = {"INC E",           0,  4,     *inc_e},
+    [0x1d] = {"DEC E",           0,  4,     *dec_e},
     [0x1e] = {"LD E,d8",         1,  8,    *ld_e_n},
     [0x1f] = {"RRA",             0,  4,       NULL},
     [0x20] = {"JR NZ,r8",        1,  8,       NULL},
     [0x21] = {"LD HL,d16",       2, 12,  *ld_hl_nn},
     [0x22] = {"LD (HL+),A",      0,  8,  *ldi_hl_a},
-    [0x23] = {"INC HL",          0,  8,       NULL},
-    [0x24] = {"INC H",           0,  4,       NULL},
-    [0x25] = {"DEC H",           0,  4,       NULL},
+    [0x23] = {"INC HL",          0,  8,  *inc16_hl},
+    [0x24] = {"INC H",           0,  4,     *inc_h},
+    [0x25] = {"DEC H",           0,  4,     *dec_h},
     [0x26] = {"LD H,d8",         1,  8,    *ld_h_n},
-    [0x27] = {"RLA",             0,  4,       NULL},
-    [0x28] = {"JR r8",           1, 12,       NULL},
-    [0x29] = {"ADD HL,DE",       0,  8,       NULL},
+    [0x27] = {"DAA",             0,  4,       NULL},
+    [0x28] = {"JR C,r8",         1, 12,       NULL},
+    [0x29] = {"ADD HL,HL",       0,  8,       NULL},
     [0x2a] = {"LD A,(HL+)",      0,  8,  *ldi_a_hl},
     [0x2b] = {"DEC HL",          0,  8,       NULL},
-    [0x2c] = {"INC L",           0,  4,      *inc_l},
-    [0x2d] = {"DEC L",           0,  4,       NULL},
+    [0x2c] = {"INC L",           0,  4,     *inc_l},
+    [0x2d] = {"DEC L",           0,  4,     *dec_l},
     [0x2e] = {"LD L,d8",         1,  8,    *ld_l_n},
-    [0x2f] = {"CPL",             0,  4,       NULL},
+    [0x2f] = {"CPL",             0,  4,       *cpl},
     [0x30] = {"JR NC,r8",        1,  8,       NULL},
     [0x31] = {"LD SP,d16",       2, 12,  *ld_sp_nn},
     [0x32] = {"LD (HL-),A",      0,  8,  *ldd_hl_a},
-    [0x33] = {"INC SP",          0,  8,       NULL},
+    [0x33] = {"INC SP",          0,  8,  *inc16_sp},
     [0x34] = {"INC (HL)",        0, 12,       NULL},
     [0x35] = {"DEC (HL)",        0, 12,       NULL},
     [0x36] = {"LD (HL),d8",      1, 12,   *ld_hl_n},
@@ -122,8 +122,8 @@ instruction instructions [0x100] = {
     [0x39] = {"ADD HL,SP",       0,  8,       NULL},
     [0x3a] = {"LD A,(HL-)",      0,  8,  *ldd_a_hl},
     [0x3b] = {"DEC SP",          0,  8,       NULL},
-    [0x3c] = {"INC A",           0,  4,       NULL},
-    [0x3d] = {"DEC A",           0,  4,       NULL},
+    [0x3c] = {"INC A",           0,  4,     *inc_a},
+    [0x3d] = {"DEC A",           0,  4,     *dec_a},
     [0x3e] = {"LD A,d8",         1,  8,    *ld_a_n},
     [0x3f] = {"CCF",             0,  4,       NULL},
     [0x40] = {"LD B,B",          0,  4,    *ld_b_b},
@@ -214,14 +214,14 @@ instruction instructions [0x100] = {
     [0x95] = {"SUB L",           0,  4,     *sub_l},
     [0x96] = {"SUB (HL)",        0,  8,    *sub_hl},
     [0x97] = {"SUB A",           0,  4,     *sub_a},
-    [0x98] = {"SBC A,B",         0,  4,       NULL},
-    [0x99] = {"SBC A,C",         0,  4,       NULL},
-    [0x9a] = {"SBC A,D",         0,  4,       NULL},
-    [0x9b] = {"SBC A,E",         0,  4,       NULL},
-    [0x9c] = {"SBC A,H",         0,  4,       NULL},
-    [0x9d] = {"SBC A,L",         0,  4,       NULL},
-    [0x9e] = {"SBC A,(HL)",      0,  8,       NULL},
-    [0x9f] = {"SBC A,A",         0,  4,       NULL},
+    [0x98] = {"SBC A,B",         0,  4,   *sbc_a_b},
+    [0x99] = {"SBC A,C",         0,  4,   *sbc_a_c},
+    [0x9a] = {"SBC A,D",         0,  4,   *sbc_a_d},
+    [0x9b] = {"SBC A,E",         0,  4,   *sbc_a_e},
+    [0x9c] = {"SBC A,H",         0,  4,   *sbc_a_h},
+    [0x9d] = {"SBC A,L",         0,  4,   *sbc_a_l},
+    [0x9e] = {"SBC A,(HL)",      0,  8,  *sbc_a_hl},
+    [0x9f] = {"SBC A,A",         0,  4,   *sbc_a_a},
     [0xa0] = {"AND B",           0,  4,       NULL},
     [0xa1] = {"AND C",           0,  4,       NULL},
     [0xa2] = {"AND D",           0,  4,       NULL},
@@ -322,6 +322,9 @@ instruction instructions [0x100] = {
 
 void cpu_init(){
 
+    ints.IE = access_mem(0xFFFF);
+    ints.IF = access_mem(0xFF0F);
+
     set_af(0x01B0);
     set_bc(0x0013);
     set_de(0x00D8);
@@ -345,7 +348,7 @@ void cpu_operate(){
         log_value("Current SP : 0x%.4X", cpu.SP);
         log_value("Current PC : 0x%.4X", cpu.PC);
 
-        log_value("Current OP : 0x%X", op);
+        log_value("Current OP : 0x%.2x", op);
         log_write(MSG, cur_ins->disassembly);
         fflush(logF);
         if (!cur_ins->func){
@@ -482,6 +485,7 @@ void ld_hl_n(uint8_t n){ as_ld_r1_r2(access_mem(get_hl()), n); }
 
 void ldi_hl_a(){
     *access_mem(get_hl()) = cpu.A;
+    log_value("0x%.4X is written to mem", *access_mem(get_hl()));
     set_hl(get_hl() + 1);
     cpu.PC++;
 }
@@ -510,9 +514,41 @@ void sub_l(){ as_sub_n(cpu.L); }
 void sub_a(){ as_sub_n(cpu.A); }
 void sub_hl(){ as_sub_n(read_mem(get_hl())); }
 
-void jp_nn(uint16_t nn){ as_jp(nn);}
+void sbc_a_b(){ as_sbc_a_n(cpu.B); }
+void sbc_a_c(){ as_sbc_a_n(cpu.C); }
+void sbc_a_d(){ as_sbc_a_n(cpu.D); }
+void sbc_a_e(){ as_sbc_a_n(cpu.E); }
+void sbc_a_h(){ as_sbc_a_n(cpu.H); }
+void sbc_a_l(){ as_sbc_a_n(cpu.L); }
+void sbc_a_hl(){ as_sbc_a_n(read_mem(get_hl())); }
+void sbc_a_a(){ as_sbc_a_n(cpu.A); }
 
+void jp_nn(uint16_t nn){ as_jp(nn);}
+void jr_n(uint8_t n){ as_jr_n((int8_t)n); }
+
+void inc_b(){ as_inc_n(&cpu.B);}
+void inc_c(){ as_inc_n(&cpu.C);}
+void inc_d(){ as_inc_n(&cpu.D);}
+void inc_e(){ as_inc_n(&cpu.E);}
+void inc_h(){ as_inc_n(&cpu.H);}
 void inc_l(){ as_inc_n(&cpu.L);}
+void inc_hl(){ as_inc_n(access_mem(get_hl()));}
+void inc_a(){ as_inc_n(&cpu.A);}
+
+void inc16_bc(){ set_bc(get_bc() +1); cpu.PC++; }
+void inc16_de(){ set_de(get_de() +1); cpu.PC++; }
+void inc16_hl(){ set_hl(get_hl() +1); cpu.PC++; }
+void inc16_sp(){ cpu.SP++; cpu.PC++; }
+
+void dec_b(){ as_dec_n(&cpu.B);}
+void dec_c(){ as_dec_n(&cpu.C);}
+void dec_d(){ as_dec_n(&cpu.D);}
+void dec_e(){ as_dec_n(&cpu.E);}
+void dec_h(){ as_dec_n(&cpu.H);}
+void dec_l(){ as_dec_n(&cpu.L);}
+void dec_hl(){ as_dec_n(access_mem(get_hl()));}
+void dec_a(){ as_dec_n(&cpu.A);}
+
 
 void ldh_a_n(uint8_t n){
     cpu.A = 0xFF00 + n;
@@ -521,7 +557,8 @@ void ldh_a_n(uint8_t n){
 
 void ld_nn_sp(uint16_t nn){ 
     *access_mem(nn) = (cpu.SP >> 8);
-    *access_mem(nn + 1) = (cpu.SP << 8);
+    *access_mem(nn + 1) = (cpu.SP & 0x00FF);
+    log_value("0x%.4X is written to mem", nn);
     cpu.PC++;
 }
 void ld_sp_nn(uint16_t nn){
@@ -530,6 +567,7 @@ void ld_sp_nn(uint16_t nn){
 }
 
 void cp(uint8_t n){
+    log_value("Compared value is 0x%.2X", n);
     set_flag_zero(cpu.A == n);
     set_flag_substract(1);
     set_flag_halfcarry(((cpu.A - n)&0xF) > (cpu.A&0xF));
@@ -537,25 +575,52 @@ void cp(uint8_t n){
     cpu.PC++;
 }
 
+void cpl(){
+    cpu.A = ~cpu.A;
+    set_flag_substract(1);
+    set_flag_halfcarry(1);
+    cpu.PC++;
+
+}
 /* Assembly functions */
 void as_jp(uint16_t addr){
     log_value("Jumped 0x%X", addr);
     cpu.PC = addr;
 }
 
+void as_jr_n(int8_t n){
+    log_value("Jumped 0x%X", --cpu.PC + n);
+    cpu.PC += n;
+}
+
 void as_ld_r1_r2(uint8_t * r1, uint8_t r2){
     *r1 = r2;
+    log_value("Loaded value is 0x%.2X", r2);
     cpu.PC++;
 }
 
 void as_inc_n(uint8_t * n){
+    log_value("Incremented value is 0x%.2X", *n);
     *n += 1;
+    set_flag_zero(cpu.A == *n);
+    set_flag_substract(0);
+    set_flag_halfcarry(((cpu.A - *n)&0xF) > (cpu.A&0xF));
     cpu.PC++;
+}
 
+void as_dec_n(uint8_t * n){
+    log_value("Decremented value is 0x%.2X", *n);
+    *n -= 1;
+    set_flag_zero(cpu.A == *n);
+    set_flag_substract(1);
+    set_flag_halfcarry(((cpu.A - *n)&0xF) > (cpu.A&0xF));
+    cpu.PC++;
 }
 
 
+
 void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
+    log_value("Loaded value is 0x%.4X", nn);
     switch(reg){
         case AF:
             set_af(nn);
@@ -574,6 +639,15 @@ void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
 }
 
 void as_sub_n(uint8_t n){
+    log_value("Substracted value is 0x%.2X", n);
+    set_flag_zero(cpu.A == n);
+    set_flag_substract(1);
+    set_flag_carry((cpu.A - n) < 0);
+    set_flag_halfcarry(((cpu.A - n)&0xF) > (cpu.A&0xF));
     cpu.A -= n;
     cpu.PC++;
+}
+
+void as_sbc_a_n(uint8_t n){
+    as_sub_n(n + get_flag_carry());
 }
