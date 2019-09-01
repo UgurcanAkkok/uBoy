@@ -17,6 +17,7 @@
 
  *  to contact about this program, mail akkokugurcan@gmail.com
  */
+
 #pragma once
 #include <inttypes.h>
 #include <stdbool.h>
