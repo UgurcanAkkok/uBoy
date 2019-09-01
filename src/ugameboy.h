@@ -7,5 +7,3 @@
 #include "mem.h"
 #include "cpu.h"
 #include "utils.h"
-
-#define HEXDUMP 0

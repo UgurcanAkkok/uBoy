@@ -13,6 +13,9 @@ int main(int argc, char* argv[]){
      */
 
     char * romname;
+
+    bool hexdump = 0;
+    char * dump_fname;
     
     int argc_;
     int i;
@@ -42,6 +45,11 @@ int main(int argc, char* argv[]){
                     printf("Log lvl is %s\n", arg_p);
                     set_log_lvl(atoi(arg_p));
                     break;
+                case 'x':
+                    hexdump = 1;
+                    if (arg_p)
+                        dump_fname = arg_p;
+                    break;
             }
         }
         else {
@@ -54,11 +62,9 @@ int main(int argc, char* argv[]){
     log_init();
 
     load_rom(romname);
-#if HEXDUMP
-    disassemble("rom.hexdump");
-#else
-    cpu_main();
-#endif
+
+    if (hexdump) disassemble(dump_fname);
+    else cpu_main();
 
     log_close();
 

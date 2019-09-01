@@ -34,24 +34,25 @@ void log_write(enum DEBUG_LVL lvl, char * logstr){
         return;
     }
 
+    time_t t = time(NULL);
+    struct tm now = *localtime(&t);
+    fprintf(logF, "%.2d:%.2d:%.2d %d.%d ",now.tm_hour, now.tm_min,
+            now.tm_sec, now.tm_mday, now.tm_mon + 1);
+
     switch(lvl){
         case MSG:
-            fprintf(logF, "MSG: ");
+            fprintf(logF, "MSG:    ");
             break;
         case WARN:
-            fprintf(logF, "WARN: ");
+            fprintf(logF, "WARN:   ");
             break;
         case CRITIC:
             fprintf(logF, "CRITIC: ");
             break;
         case ERR:
-            fprintf(logF, "ERR: ");
+            fprintf(logF, "ERR:    ");
             break;
     }
-    time_t t = time(NULL);
-    struct tm now = *localtime(&t);
-    fprintf(logF, "%.2d:%.2d:%.2d %d.%d\t",now.tm_hour, now.tm_min,
-            now.tm_sec, now.tm_mday, now.tm_mon + 1);
     fprintf(logF, "%s\n", logstr);
     return;
 #endif

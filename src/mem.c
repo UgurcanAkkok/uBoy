@@ -27,7 +27,6 @@ void load_rom(char * filename){
     memcpy(cart_header.title, &mem.rom[0x134], 15);
     cart_header.title[15] = '\0';
     printf("%s loading...\n", cart_header.title);
-    fprintf(logF,"%s loading...\n", cart_header.title);
 
     uint8_t gbc_flag = mem.rom[0x143];
     switch(gbc_flag){
@@ -44,7 +43,6 @@ void load_rom(char * filename){
         memcpy(cart_header.manufact, &mem.rom[0x13F], 4);
         cart_header.manufact[4] = '\0';
         printf("Manufacturer is %s\n", cart_header.manufact);
-        fprintf(logF,"Manufacturer is %s\n", cart_header.manufact);
     }
     else {
         cart_header.manufact[0] = '\0';
