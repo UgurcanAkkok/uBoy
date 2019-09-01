@@ -1,34 +1,24 @@
+/*
+ *  uGameBoy, a gameboy emulator.
+ *  Copyright (C) 2019  Uğurcan Akkök
+
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+ *  to contact about this program, mail akkokugurcan@gmail.com
+ */
+
 #include "cpu.h"
-
-void set_af(uint16_t var){
-    cpu.F = var & 0xFF;
-    cpu.A = var>>8;
-}
-void set_bc(uint16_t var){
-    cpu.B = var>>8;
-    cpu.C = var&0xFF;
-}
-void set_de(uint16_t var){
-    cpu.D = var>>8;
-    cpu.C = var&0xFF;
-}
-void set_hl(uint16_t var){
-    cpu.H = var>>8;
-    cpu.L = var&0xFF;
-}
-
-uint16_t get_af(){
-    return ((uint16_t)cpu.A << 8) | cpu.F;
-}
-uint16_t get_bc(){
-    return ((uint16_t)cpu.B << 8) | cpu.C;
-}
-uint16_t get_de(){
-    return ((uint16_t)cpu.D << 8) | cpu.E;
-}
-uint16_t get_hl(){
-    return ((uint16_t)cpu.H << 8) | cpu.L;
-}
 
 void set_flag_zero(bool val){
     cpu.F &= 0x7F;
@@ -325,10 +315,10 @@ void cpu_init(){
     ints.IE = access_mem(0xFFFF);
     ints.IF = access_mem(0xFF0F);
 
-    set_af(0x01B0);
-    set_bc(0x0013);
-    set_de(0x00D8);
-    set_hl(0x014D);
+    cpu.AF = 0x01B0;
+    cpu.BC = 0x0013;
+    cpu.DE = 0x00D8;
+    cpu.HL = 0x014D;
 
     cpu.SP = 0xFFFE;
     cpu.PC = 0x0100;
@@ -341,10 +331,10 @@ void cpu_operate(){
         instruction * cur_ins = &instructions[op];
 
         log_write(MSG, "Register values:");
-        log_value(MSG,"Current AF : 0x%.4X", get_af());
-        log_value(MSG,"Current BC : 0x%.4X", get_bc());
-        log_value(MSG,"Current DE : 0x%.4X", get_de());
-        log_value(MSG,"Current HL : 0x%.4X", get_hl());
+        log_value(MSG,"Current AF : 0x%.4X", cpu.AF);
+        log_value(MSG,"Current BC : 0x%.4X", cpu.BC);
+        log_value(MSG,"Current DE : 0x%.4X", cpu.DE);
+        log_value(MSG,"Current HL : 0x%.4X", cpu.HL);
         log_value(MSG,"Current SP : 0x%.4X", cpu.SP);
         log_value(MSG,"Current PC : 0x%.4X", cpu.PC);
 
@@ -403,7 +393,7 @@ void ld_b_e(){ as_ld_r1_r2(&cpu.B, cpu.E); }
 void ld_b_h(){ as_ld_r1_r2(&cpu.B, cpu.H); }
 void ld_b_l(){ as_ld_r1_r2(&cpu.B, cpu.L); }
 void ld_b_a(){ as_ld_r1_r2(&cpu.B, cpu.A); }
-void ld_b_hl(){ as_ld_r1_r2(&cpu.B, read_mem(get_hl())); }
+void ld_b_hl(){ as_ld_r1_r2(&cpu.B, read_mem(cpu.HL)); }
 
 void ld_c_b(){ as_ld_r1_r2(&cpu.C, cpu.B); }
 void ld_c_c(){ cpu.PC++; }
@@ -412,7 +402,7 @@ void ld_c_e(){ as_ld_r1_r2(&cpu.C, cpu.E); }
 void ld_c_h(){ as_ld_r1_r2(&cpu.C, cpu.H); }
 void ld_c_l(){ as_ld_r1_r2(&cpu.C, cpu.L); }
 void ld_c_a(){ as_ld_r1_r2(&cpu.C, cpu.A); }
-void ld_c_hl(){ as_ld_r1_r2(&cpu.C, read_mem(get_hl())); }
+void ld_c_hl(){ as_ld_r1_r2(&cpu.C, read_mem(cpu.HL)); }
 
 void ld_d_b(){ as_ld_r1_r2(&cpu.D, cpu.B); }
 void ld_d_c(){ as_ld_r1_r2(&cpu.D, cpu.C); }
@@ -421,7 +411,7 @@ void ld_d_e(){ as_ld_r1_r2(&cpu.D, cpu.E); }
 void ld_d_h(){ as_ld_r1_r2(&cpu.D, cpu.H); }
 void ld_d_l(){ as_ld_r1_r2(&cpu.D, cpu.L); }
 void ld_d_a(){ as_ld_r1_r2(&cpu.D, cpu.A); }
-void ld_d_hl(){ as_ld_r1_r2(&cpu.D, read_mem(get_hl())); }
+void ld_d_hl(){ as_ld_r1_r2(&cpu.D, read_mem(cpu.HL)); }
 
 void ld_e_b(){ as_ld_r1_r2(&cpu.E, cpu.B); }
 void ld_e_c(){ as_ld_r1_r2(&cpu.E, cpu.C); }
@@ -430,7 +420,7 @@ void ld_e_e(){ cpu.PC++; }
 void ld_e_h(){ as_ld_r1_r2(&cpu.E, cpu.H); }
 void ld_e_l(){ as_ld_r1_r2(&cpu.E, cpu.L); }
 void ld_e_a(){ as_ld_r1_r2(&cpu.E, cpu.A); }
-void ld_e_hl(){ as_ld_r1_r2(&cpu.E, read_mem(get_hl())); }
+void ld_e_hl(){ as_ld_r1_r2(&cpu.E, read_mem(cpu.HL)); }
 
 void ld_h_b(){ as_ld_r1_r2(&cpu.H, cpu.B); }
 void ld_h_c(){ as_ld_r1_r2(&cpu.H, cpu.C); }
@@ -439,7 +429,7 @@ void ld_h_e(){ as_ld_r1_r2(&cpu.H, cpu.E); }
 void ld_h_h(){ cpu.PC++; }
 void ld_h_l(){ as_ld_r1_r2(&cpu.H, cpu.L); }
 void ld_h_a(){ as_ld_r1_r2(&cpu.H, cpu.A); }
-void ld_h_hl(){ as_ld_r1_r2(&cpu.H, read_mem(get_hl())); }
+void ld_h_hl(){ as_ld_r1_r2(&cpu.H, read_mem(cpu.HL)); }
 
 void ld_l_b(){ as_ld_r1_r2(&cpu.L, cpu.B); }
 void ld_l_c(){ as_ld_r1_r2(&cpu.L, cpu.C); }
@@ -448,15 +438,15 @@ void ld_l_e(){ as_ld_r1_r2(&cpu.L, cpu.E); }
 void ld_l_h(){ as_ld_r1_r2(&cpu.L, cpu.H); }
 void ld_l_l(){ cpu.PC++; }
 void ld_l_a(){ as_ld_r1_r2(&cpu.L, cpu.A); }
-void ld_l_hl(){ as_ld_r1_r2(&cpu.L, read_mem(get_hl())); }
+void ld_l_hl(){ as_ld_r1_r2(&cpu.L, read_mem(cpu.HL)); }
 
-void ld_hl_b(){ as_ld_r1_r2(access_mem(get_hl()), cpu.B); }
-void ld_hl_c(){ as_ld_r1_r2(access_mem(get_hl()), cpu.C); }
-void ld_hl_d(){ as_ld_r1_r2(access_mem(get_hl()), cpu.D); }
-void ld_hl_e(){ as_ld_r1_r2(access_mem(get_hl()), cpu.E); }
-void ld_hl_h(){ as_ld_r1_r2(access_mem(get_hl()), cpu.H); }
-void ld_hl_l(){ as_ld_r1_r2(access_mem(get_hl()), cpu.L); }
-void ld_hl_a(){ as_ld_r1_r2(access_mem(get_hl()), cpu.L); }
+void ld_hl_b(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.B); }
+void ld_hl_c(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.C); }
+void ld_hl_d(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.D); }
+void ld_hl_e(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.E); }
+void ld_hl_h(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.H); }
+void ld_hl_l(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.L); }
+void ld_hl_a(){ as_ld_r1_r2(access_mem(cpu.HL), cpu.L); }
 
 void ld_a_b(){ as_ld_r1_r2(&cpu.A, cpu.B); }
 void ld_a_c(){ as_ld_r1_r2(&cpu.A, cpu.C); }
@@ -465,15 +455,15 @@ void ld_a_e(){ as_ld_r1_r2(&cpu.A, cpu.E); }
 void ld_a_h(){ as_ld_r1_r2(&cpu.A, cpu.H); }
 void ld_a_l(){ as_ld_r1_r2(&cpu.A, cpu.L); }
 void ld_a_a(){ cpu.PC++; }
-void ld_a_hl(){ as_ld_r1_r2(&cpu.A, read_mem(get_hl())); }
+void ld_a_hl(){ as_ld_r1_r2(&cpu.A, read_mem(cpu.HL)); }
 
-void ld_a_bc(){ as_ld_r1_r2(&cpu.A, read_mem(get_bc())); }
-void ld_a_de(){ as_ld_r1_r2(&cpu.A, read_mem(get_de())); }
-void ld_bc_a(){ as_ld_r1_r2(access_mem(get_bc()), cpu.A); }
-void ld_de_a(){ as_ld_r1_r2(access_mem(get_de()), cpu.A); }
-void ld_bc_nn(uint16_t nn){ as_ld_rr_nn(BC, nn); }
-void ld_de_nn(uint16_t nn){as_ld_rr_nn(DE, nn); }
-void ld_hl_nn(uint16_t nn){as_ld_rr_nn(HL, nn); }
+void ld_a_bc(){ as_ld_r1_r2(&cpu.A, read_mem(cpu.BC)); }
+void ld_a_de(){ as_ld_r1_r2(&cpu.A, read_mem(cpu.DE)); }
+void ld_bc_a(){ as_ld_r1_r2(access_mem(cpu.BC), cpu.A); }
+void ld_de_a(){ as_ld_r1_r2(access_mem(cpu.DE), cpu.A); }
+void ld_bc_nn(uint16_t nn){ as_ld_rr_nn(&cpu.BC, nn); }
+void ld_de_nn(uint16_t nn){as_ld_rr_nn(&cpu.DE, nn); }
+void ld_hl_nn(uint16_t nn){as_ld_rr_nn(&cpu.HL, nn); }
 void ld_b_n(uint8_t n){ as_ld_r1_r2(&cpu.B, n); }
 void ld_c_n(uint8_t n){ as_ld_r1_r2(&cpu.C, n); }
 void ld_e_n(uint8_t n){ as_ld_r1_r2(&cpu.E, n); }
@@ -481,27 +471,27 @@ void ld_d_n(uint8_t n){ as_ld_r1_r2(&cpu.D, n); }
 void ld_h_n(uint8_t n){ as_ld_r1_r2(&cpu.H, n); }
 void ld_l_n(uint8_t n){ as_ld_r1_r2(&cpu.L, n); }
 void ld_a_n(uint8_t n){ as_ld_r1_r2(&cpu.A, n); }
-void ld_hl_n(uint8_t n){ as_ld_r1_r2(access_mem(get_hl()), n); }
+void ld_hl_n(uint8_t n){ as_ld_r1_r2(access_mem(cpu.HL), n); }
 
 void ldi_hl_a(){
-    *access_mem(get_hl()) = cpu.A;
-    log_value(MSG,"0x%.4X is written to mem", *access_mem(get_hl()));
-    set_hl(get_hl() + 1);
+    *access_mem(cpu.HL) = cpu.A;
+    log_value(MSG,"0x%.4X is written to mem", *access_mem(cpu.HL));
+    cpu.HL++;
     cpu.PC++;
 }
 void ldi_a_hl(){
-    cpu.A = read_mem(get_hl());
-    set_hl(get_hl()+1);
+    cpu.A = read_mem(cpu.HL);
+    cpu.HL++;
     cpu.PC++;
 }
 void ldd_hl_a(){
-    *access_mem(get_hl()) = cpu.A;
-    set_hl(get_hl() - 1);
+    *access_mem(cpu.HL) = cpu.A;
+    cpu.HL--;
     cpu.PC++;
 }
 void ldd_a_hl(){
-    cpu.A = read_mem(get_hl());
-    set_hl(get_hl()-1);
+    cpu.A = read_mem(cpu.HL);
+    cpu.HL--;
     cpu.PC++;
 }
 
@@ -512,7 +502,7 @@ void sub_e(){ as_sub_n(cpu.E); }
 void sub_h(){ as_sub_n(cpu.H); }
 void sub_l(){ as_sub_n(cpu.L); }
 void sub_a(){ as_sub_n(cpu.A); }
-void sub_hl(){ as_sub_n(read_mem(get_hl())); }
+void sub_hl(){ as_sub_n(read_mem(cpu.HL)); }
 
 void sbc_a_b(){ as_sbc_a_n(cpu.B); }
 void sbc_a_c(){ as_sbc_a_n(cpu.C); }
@@ -520,7 +510,7 @@ void sbc_a_d(){ as_sbc_a_n(cpu.D); }
 void sbc_a_e(){ as_sbc_a_n(cpu.E); }
 void sbc_a_h(){ as_sbc_a_n(cpu.H); }
 void sbc_a_l(){ as_sbc_a_n(cpu.L); }
-void sbc_a_hl(){ as_sbc_a_n(read_mem(get_hl())); }
+void sbc_a_hl(){ as_sbc_a_n(read_mem(cpu.HL)); }
 void sbc_a_a(){ as_sbc_a_n(cpu.A); }
 
 void jp_nn(uint16_t nn){ as_jp(nn);}
@@ -532,12 +522,12 @@ void inc_d(){ as_inc_n(&cpu.D);}
 void inc_e(){ as_inc_n(&cpu.E);}
 void inc_h(){ as_inc_n(&cpu.H);}
 void inc_l(){ as_inc_n(&cpu.L);}
-void inc_hl(){ as_inc_n(access_mem(get_hl()));}
+void inc_hl(){ as_inc_n(access_mem(cpu.HL));}
 void inc_a(){ as_inc_n(&cpu.A);}
 
-void inc16_bc(){ set_bc(get_bc() +1); cpu.PC++; }
-void inc16_de(){ set_de(get_de() +1); cpu.PC++; }
-void inc16_hl(){ set_hl(get_hl() +1); cpu.PC++; }
+void inc16_bc(){ cpu.BC++; cpu.PC++; }
+void inc16_de(){ cpu.DE++; cpu.PC++; }
+void inc16_hl(){ cpu.HL++; cpu.PC++; }
 void inc16_sp(){ cpu.SP++; cpu.PC++; }
 
 void dec_b(){ as_dec_n(&cpu.B);}
@@ -546,7 +536,7 @@ void dec_d(){ as_dec_n(&cpu.D);}
 void dec_e(){ as_dec_n(&cpu.E);}
 void dec_h(){ as_dec_n(&cpu.H);}
 void dec_l(){ as_dec_n(&cpu.L);}
-void dec_hl(){ as_dec_n(access_mem(get_hl()));}
+void dec_hl(){ as_dec_n(access_mem(cpu.HL));}
 void dec_a(){ as_dec_n(&cpu.A);}
 
 
@@ -619,22 +609,9 @@ void as_dec_n(uint8_t * n){
 
 
 
-void as_ld_rr_nn(enum reg_pairs reg, uint16_t nn){
+void as_ld_rr_nn(uint16_t * reg, uint16_t nn){
     log_value(MSG,"Loaded value is 0x%.4X", nn);
-    switch(reg){
-        case AF:
-            set_af(nn);
-            break;
-        case BC:
-            set_bc(nn);
-            break;
-        case DE:
-            set_de(nn);
-            break;
-        case HL:
-            set_hl(nn);
-            break;
-    }
+    *reg = nn;
     cpu.PC++;
 }
 
